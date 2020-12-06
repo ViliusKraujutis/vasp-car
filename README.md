@@ -1,4 +1,4 @@
-## Vasp RC car
+## Wasp RC car
 
 A black and yellow little car which features:
 - an Arduino UNO (actually a cloned version NHduino UNO)
