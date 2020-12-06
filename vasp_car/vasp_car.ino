@@ -1,8 +1,8 @@
-/*   
-HC05 - Bluetooth AT-Command mode  
-*/ 
 #include <SoftwareSerial.h> 
+
+// HC-05 bluetooth module communication via Serial
 SoftwareSerial hc05(13, 12); // RX | TX 
+
 String hc05Value = "";
 int angle = 0;
 int strength = 0;
@@ -10,6 +10,7 @@ int button = 0;
 int LED = 10; 
 
 
+// L298N control via 6 GPIO pins (digital and analog)
 int motor1pin1 = 2;
 int motor1pin2 = 3;
 int motor1Enable = 5;
@@ -18,31 +19,36 @@ int motor2pin1 = 7;
 int motor2pin2 = 4;
 int motor2Enable = 6;
 
+// Main setup method which calls both Bluetooth HC-05 and L298N motors setup
 void setup() {
   setupBluetooth();
   setupMotors();
 }
 
+// Main loop which reads joystick input via bluetooth HC-05 from Android application
+// and then makes moves using DC motors controlled via L298N DC motor drive 
 void loop() {
   loopBluetooth();
   loopMotors();
 }
 
 
+// Setup Bluetooth HC-05 module
 void setupBluetooth() 
 {   
  Serial.begin(9600); 
  hc05.begin(9600); 
  pinMode(LED, OUTPUT); 
+
+ // TODO set custom password
  Serial.println("Ready to connect\nDefualt password is 1234 or 000"); 
 }  
 
+// Reads joystick input via bluetooth HC-05 from Android application
 void loopBluetooth() {
   
   if (hc05.available()>0) 
   {
-//    flag = hc05.read();
-//    Serial.println(flag); 
       String hc05Value = hc05.readStringUntil('#');
       if(hc05Value.length()==7)
       {
@@ -58,6 +64,8 @@ void loopBluetooth() {
   }
 }
 
+
+// setup L298N motors drive
 void setupMotors() {
   pinMode(motor1Enable, OUTPUT);
   pinMode(motor2Enable, OUTPUT);
